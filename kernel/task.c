@@ -12,22 +12,21 @@ void xTaskCreate(void (*task)(void),
     if (task_count >= MAX_TASKS)
         return;
 
-    if (stack_size == 0)
-        stack_size = DEFAULT_STACK_SIZE;
+    TCB *t = &tasks[task_count++];
 
-    TCB *t = &tasks[task_count];
+    t->entry = task;
+    t->priority = priority;
+    t->state = 0;
+    t->stack_size = stack_size;
 
-    t->stack = (uint8_t*)kmalloc(stack_size);
+    t->stack = (uint8_t *) kmalloc(stack_size);
 
-    uint64_t *sp = (uint64_t*)(t->stack + stack_size);
+    uint64_t *sp = (uint64_t *) (t->stack + stack_size);
 
     /* Configurar contexto inicial */
 
     t->regs[0] = (uint64_t)task;   // ra
     t->regs[1] = (uint64_t)sp;     // sp
+    t->sepc = (uint64_t) task;
 
-    t->entry = task;
-    t->priority = priority;
-
-    task_count++;
 }

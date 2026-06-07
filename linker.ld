@@ -14,12 +14,13 @@ SECTIONS
 
   .data : { *(.data*) }
 
-  __global_pointer$ = . + 0x800;
-
-  .bss : {
+  .bss : ALIGN(4096) {
     __bss_start = .;
     *(.bss*)
     *(COMMON)
     __bss_end = .;
   }
+
+  __global_pointer$ = . + 0x800;
+
 }
