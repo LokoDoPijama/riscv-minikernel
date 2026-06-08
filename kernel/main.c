@@ -86,11 +86,12 @@ void kernel_main()
     xTaskCreate(task3, 2048, 1);
     xTaskCreate(task4, 2048, 1);
 
+    // Configurando trap_entry como função a ser chamada caso ocorra uma trap (exceção ou interrupção)
     asm volatile("csrw stvec, %0" :: "r"(trap_entry));
     
     timer_init(10000);
 
-    scheduler_start();
+    scheduler_start();  
 
     while (1);
 }
